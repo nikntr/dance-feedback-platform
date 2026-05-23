@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: #080C14;
+    color: #EEF2F9;
+    font-family: 'Onest', sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #243044;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2E3D56;
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(232, 144, 10, 0.25);
+    color: #EEF2F9;
+  }
+}
+
+@layer components {
+  /* Page container */
+  .page-container {
+    @apply px-4 py-6 max-w-6xl sm:px-6 sm:py-8;
+  }
+
+  /* Section title */
+  .page-title {
+    @apply font-display text-2xl font-bold tracking-tight text-text-primary;
+  }
+
+  .page-subtitle {
+    @apply mt-1 text-sm text-text-secondary;
+  }
+
+  /* Divider */
+  .divider {
+    @apply h-px bg-border-subtle;
+  }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base;
+  }
+}

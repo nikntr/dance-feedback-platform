@@ -55,27 +55,9 @@ src/
     └── handlers.ts
 ```
 
-## Переключение на реальный бэкенд
-
-В файле `.env.development`:
-```env
-VITE_API_BASE_URL=http://localhost:8080/api/v1
-VITE_USE_MOCKS=false  # ← отключить моки
-```
-
-> Все запросы к бэкенду идут с префиксом `api/v1/` (задаётся через `VITE_API_BASE_URL`).
-
 ## Дизайн-система
 
 **Цвета:** Тёмная тема с amber/gold акцентом (#E8900A)  
 **Шрифты:** Unbounded (заголовки) + Onest (текст)  
 **Компоненты:** Button, Input, Card, Badge, StatusBadge
-
-## Команды
-
-```bash
-npm run dev       # Dev-сервер
-npm run build     # Продакшн-сборка
-npm run lint      # ESLint
-npm run format    # Prettier
 ```

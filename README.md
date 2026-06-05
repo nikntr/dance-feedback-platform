@@ -13,8 +13,7 @@
 | **Axios** | HTTP-клиент с interceptors |
 | **React Hook Form + Zod** | Формы и валидация |
 | **axios-mock-adapter** | Моки API |
-| **react-hot-toast** | Уведомления |
-| **lucide-react** | Иконки |
+
 
 ## Тестовые аккаунты (мок-режим)
 
@@ -59,4 +58,3 @@ src/
 **Цвета:** Тёмная тема с amber/gold акцентом (#E8900A)  
 **Шрифты:** Unbounded (заголовки) + Onest (текст)  
 **Компоненты:** Button, Input, Card, Badge, StatusBadge
-```

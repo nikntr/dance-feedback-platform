@@ -12,7 +12,6 @@
 | **Zustand** | Клиентский стейт (авторизация) |
 | **Axios** | HTTP-клиент с interceptors |
 | **React Hook Form + Zod** | Формы и валидация |
-| **Tailwind CSS** | Стилизация |
 | **axios-mock-adapter** | Моки API |
 | **react-hot-toast** | Уведомления |
 | **lucide-react** | Иконки |

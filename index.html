@@ -7,6 +7,24 @@
     <meta name="theme-color" content="#080C14" />
     <title>Dance Feedback Platform</title>
 
+    <!-- Apply persisted/system theme before first paint to avoid a flash -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('dfp-theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          var r = document.documentElement;
+          r.classList.remove('light', 'dark');
+          r.classList.add(t);
+          r.style.colorScheme = t;
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', t === 'dark' ? '#080C14' : '#F5F7FA');
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

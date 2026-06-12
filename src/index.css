@@ -3,8 +3,68 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  /* ── Theme tokens ───────────────────────────────────────────────────────
+     Semantic colors are exposed as space-separated RGB channels so Tailwind's
+     `rgb(var(--x) / <alpha-value>)` keeps opacity modifiers (e.g. bg-bg-elevated/50).
+     Dark is the default; `.light` on <html> swaps the palette.                */
+
+  :root,
+  .dark {
     color-scheme: dark;
+
+    --c-bg-base: 8 12 20;
+    --c-bg-surface: 15 20 32;
+    --c-bg-elevated: 22 29 46;
+    --c-bg-overlay: 28 36 56;
+
+    --c-border-subtle: 30 39 56;
+    --c-border: 36 48 68;
+    --c-border-strong: 46 61 86;
+
+    --c-text-primary: 238 242 249;
+    --c-text-secondary: 138 150 170;
+    --c-text-muted: 120 132 152;
+    --c-text-inverse: 8 12 20;
+
+    --shadow-glow-accent: 0 0 20px -4px rgba(232, 144, 10, 0.35);
+    --shadow-glow-sm: 0 0 12px -3px rgba(232, 144, 10, 0.2);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(36, 48, 68, 0.6);
+    --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(36, 48, 68, 0.8);
+    --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.7);
+
+    --surface-gradient: linear-gradient(135deg, #0f1420 0%, #0b0f1a 100%);
+
+    --scrollbar-thumb: 36 48 68;
+    --scrollbar-thumb-hover: 46 61 86;
+  }
+
+  .light {
+    color-scheme: light;
+
+    --c-bg-base: 245 247 250;
+    --c-bg-surface: 255 255 255;
+    --c-bg-elevated: 237 240 245;
+    --c-bg-overlay: 226 231 239;
+
+    --c-border-subtle: 232 236 242;
+    --c-border: 215 221 230;
+    --c-border-strong: 192 201 214;
+
+    --c-text-primary: 19 24 34;
+    --c-text-secondary: 88 101 119;
+    --c-text-muted: 103 113 131;
+    --c-text-inverse: 8 12 20; /* dark text on amber buttons — same in both themes */
+
+    --shadow-glow-accent: 0 2px 12px -2px rgba(232, 144, 10, 0.3);
+    --shadow-glow-sm: 0 1px 4px -1px rgba(232, 144, 10, 0.18);
+    --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06), 0 0 0 1px rgba(16, 24, 40, 0.05);
+    --shadow-card-hover: 0 6px 16px -4px rgba(16, 24, 40, 0.12), 0 0 0 1px rgba(16, 24, 40, 0.07);
+    --shadow-modal: 0 24px 64px rgba(16, 24, 40, 0.2);
+
+    --surface-gradient: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+
+    --scrollbar-thumb: 199 205 216;
+    --scrollbar-thumb-hover: 174 182 196;
   }
 
   * {
@@ -18,9 +78,10 @@
   }
 
   body {
-    background-color: #080C14;
-    color: #EEF2F9;
+    background-color: rgb(var(--c-bg-base));
+    color: rgb(var(--c-text-primary));
     font-family: 'Onest', sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   /* Custom scrollbar */
@@ -32,18 +93,30 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #243044;
+    background: rgb(var(--scrollbar-thumb));
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #2E3D56;
+    background: rgb(var(--scrollbar-thumb-hover));
   }
 
   /* Selection */
   ::selection {
     background: rgba(232, 144, 10, 0.25);
-    color: #EEF2F9;
+    color: rgb(var(--c-text-primary));
   }
+
+  /* ── Light-theme contrast fixes ─────────────────────────────────────────
+     Brand amber and Tailwind palette mid-tones are tuned for dark surfaces.
+     On light surfaces they fail WCAG, so deepen them only under `.light`.
+     Dark mode is untouched.                                                  */
+  .light .text-accent-500 { color: #a8530b; }
+  .light .text-accent-400 { color: #b45c0d; }
+  .light .text-emerald-400 { color: #047857; }
+  .light .text-blue-400 { color: #2563eb; }
+  .light .text-amber-400 { color: #b45309; }
+  .light .text-purple-400 { color: #7c3aed; }
+  .light .text-red-400 { color: #dc2626; }
 }
 
 @layer components {
@@ -69,5 +142,17 @@
   /* Focus ring */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base;
+  }
+}
+
+/* ── Accessibility: respect reduced-motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

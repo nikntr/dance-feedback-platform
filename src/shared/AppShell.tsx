@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth.store'
 import { cn, getInitials } from '@/lib/utils'
+import { ThemeToggle } from '@/shared/ThemeToggle'
 import type { UserRole } from '@/api/types'
 
 // ── Navigation config ─────────────────────────────────────────────────────
@@ -140,8 +141,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         </ul>
       </nav>
 
-      {/* User info + Logout */}
+      {/* Settings + User info + Logout */}
       <div className="border-t border-border-subtle p-3">
+        <ThemeToggle className="mb-1" />
         <div className="flex items-center gap-3 rounded-md px-2 py-2">
           {/* Avatar */}
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-500/20 text-xs font-bold font-display text-accent-400">

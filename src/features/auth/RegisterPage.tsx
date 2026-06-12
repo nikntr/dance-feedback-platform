@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { InlineError } from '@/shared/ErrorBoundary'
 import { LegalDialog, PRIVACY_POLICY, TERMS_OF_USE } from '@/shared/LegalDialog'
+import { ThemeToggle } from '@/shared/ThemeToggle'
 import type { RegisterRequest, UserRole } from '@/api/types'
 
 const registerSchema = z.object({
@@ -96,6 +97,7 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg-base px-4 py-10 sm:px-8 sm:py-12">
+      <ThemeToggle variant="icon" className="fixed right-4 top-4 z-50" />
       <div className="w-full max-w-[440px]">
         {/* Header */}
         <div className="mb-8 text-center">

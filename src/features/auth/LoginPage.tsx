@@ -10,6 +10,7 @@ import { useLogin } from '@/api/endpoints/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { InlineError } from '@/shared/ErrorBoundary'
+import { ThemeToggle } from '@/shared/ThemeToggle'
 import { cn } from '@/lib/utils'
 
 const loginSchema = z.object({
@@ -67,6 +68,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen bg-bg-base">
+      <ThemeToggle variant="icon" className="fixed right-4 top-4 z-50" />
       {/* Left panel — branding */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-bg-surface border-r border-border-subtle relative overflow-hidden">
         {/* Background decoration */}

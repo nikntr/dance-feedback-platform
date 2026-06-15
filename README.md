@@ -77,6 +77,9 @@ VITE_USE_MOCKS=false  # ← отключить моки
 
 > Все запросы к бэкенду идут с префиксом `api/v1/` (задаётся через `VITE_API_BASE_URL`).
 
+📦 **Материалы для бэкенд-разработчика** (контракт API, CORS, Docker, docker-compose) —
+в [`docs/backend-integration/`](docs/backend-integration/README.md).
+
 ## Дизайн-система
 
 **Цвета:** Тёмная тема с amber/gold акцентом (#E8900A)  

@@ -123,6 +123,15 @@ export function setupMocks(instance: AxiosInstance) {
 
   // ── FEEDBACK REQUESTS ─────────────────────────────────────────────────
 
+  mock.onGet('/feedback/requests').reply((config) => {
+    const { participant_id, judge_id, status } = config.params ?? {}
+    let data = MOCK_FEEDBACK_REQUESTS
+    if (participant_id) data = data.filter((r) => r.participant_id === participant_id)
+    if (judge_id) data = data.filter((r) => r.judge_id === judge_id)
+    if (status) data = data.filter((r) => r.status === status)
+    return [200, { data, pagination: { page: 1, limit: 20, total: data.length } }]
+  })
+
   mock.onPost('/feedback/requests').reply((config) => {
     const body = JSON.parse(config.data)
     const newRequest = {

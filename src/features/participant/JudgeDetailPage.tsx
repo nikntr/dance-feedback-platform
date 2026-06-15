@@ -2,16 +2,42 @@ import { useParams, Link } from 'react-router-dom'
 import { Star, ArrowLeft, MessageSquare } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { InlineError } from '@/shared/ErrorBoundary'
+import { LoadingSpinner } from '@/shared/LoadingSpinner'
 import { getInitials } from '@/lib/utils'
-import { MOCK_JUDGES } from '@/mocks/data'
+import { useJudge } from '@/api/endpoints/judges'
 
 export default function JudgeDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const judge = MOCK_JUDGES.find((j) => j.id === id)
-  if (!judge) return <div className="page-container"><p className="text-text-muted">Судья не найден</p></div>
+  const { data: judge, isLoading, isError } = useJudge(id ?? '')
+
+  const back = (
+    <Button variant="ghost" size="sm" asChild className="mb-6">
+      <Link to="/judges"><ArrowLeft className="h-4 w-4" />Назад</Link>
+    </Button>
+  )
+
+  if (isLoading) {
+    return (
+      <div className="page-container max-w-2xl">
+        {back}
+        <div className="flex justify-center py-16"><LoadingSpinner size="lg" /></div>
+      </div>
+    )
+  }
+
+  if (isError || !judge) {
+    return (
+      <div className="page-container max-w-2xl">
+        {back}
+        <InlineError message="Судья не найден" />
+      </div>
+    )
+  }
+
   return (
     <div className="page-container max-w-2xl">
-      <Button variant="ghost" size="sm" asChild className="mb-6"><Link to="/judges"><ArrowLeft className="h-4 w-4" />Назад</Link></Button>
+      {back}
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-center gap-4 mb-4">

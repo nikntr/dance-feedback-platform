@@ -5,25 +5,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Base surfaces
+        // Base surfaces — theme-aware via CSS variables (channel format keeps /opacity working)
         bg: {
-          base: '#080C14',
-          surface: '#0F1420',
-          elevated: '#161D2E',
-          overlay: '#1C2438',
+          base: 'rgb(var(--c-bg-base) / <alpha-value>)',
+          surface: 'rgb(var(--c-bg-surface) / <alpha-value>)',
+          elevated: 'rgb(var(--c-bg-elevated) / <alpha-value>)',
+          overlay: 'rgb(var(--c-bg-overlay) / <alpha-value>)',
         },
         // Borders
         border: {
-          subtle: '#1E2738',
-          DEFAULT: '#243044',
-          strong: '#2E3D56',
+          subtle: 'rgb(var(--c-border-subtle) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--c-border) / <alpha-value>)',
+          strong: 'rgb(var(--c-border-strong) / <alpha-value>)',
         },
         // Text
         text: {
-          primary: '#EEF2F9',
-          secondary: '#8A96AA',
-          muted: '#4E5A6E',
-          inverse: '#080C14',
+          primary: 'rgb(var(--c-text-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--c-text-secondary) / <alpha-value>)',
+          muted: 'rgb(var(--c-text-muted) / <alpha-value>)',
+          inverse: 'rgb(var(--c-text-inverse) / <alpha-value>)',
         },
         // Accent — amber/gold (stage lighting)
         accent: {
@@ -71,16 +71,16 @@ export default {
         '2xl': '24px',
       },
       boxShadow: {
-        'glow-accent': '0 0 20px -4px rgba(232, 144, 10, 0.35)',
-        'glow-sm': '0 0 12px -3px rgba(232, 144, 10, 0.2)',
-        'card': '0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(36,48,68,0.6)',
-        'card-hover': '0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(36,48,68,0.8)',
-        'modal': '0 24px 64px rgba(0,0,0,0.7)',
+        'glow-accent': 'var(--shadow-glow-accent)',
+        'glow-sm': 'var(--shadow-glow-sm)',
+        'card': 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+        'modal': 'var(--shadow-modal)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'noise': "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E\")",
-        'surface-gradient': 'linear-gradient(135deg, #0F1420 0%, #0B0F1A 100%)',
+        'surface-gradient': 'var(--surface-gradient)',
       },
       animation: {
         'fade-in':     'fadeIn 0.2s ease-out',

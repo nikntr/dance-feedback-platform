@@ -3,41 +3,59 @@ import { Trophy, Calendar, Users } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CompetitionStatusBadge } from '@/components/ui/badge'
+import { EmptyState, InlineError } from '@/shared/ErrorBoundary'
+import { CardSkeleton } from '@/shared/LoadingSpinner'
 import { formatDate, formatRub } from '@/lib/utils'
-import { MOCK_COMPETITIONS } from '@/mocks/data'
+import { useCompetitions } from '@/api/endpoints/competitions'
 
 export default function CompetitionsListPage() {
+  const { data, isLoading, isError } = useCompetitions()
+  const competitions = data?.data ?? []
+
   return (
     <div className="page-container">
       <div className="mb-8">
         <h1 className="page-title">Соревнования</h1>
         <p className="page-subtitle">Зарегистрируйтесь на ближайшие турниры</p>
       </div>
-      <div className="flex flex-col gap-4">
-        {MOCK_COMPETITIONS.map((comp) => (
-          <Card key={comp.id} className="hover:shadow-card-hover transition-shadow">
-            <CardContent className="flex items-center gap-4 pt-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-500/10">
-                <Trophy className="h-6 w-6 text-accent-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-base font-semibold font-display text-text-primary">{comp.title}</p>
-                  <CompetitionStatusBadge status={comp.status} />
+
+      {isLoading ? (
+        <div className="flex flex-col gap-4">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+      ) : isError ? (
+        <InlineError message="Не удалось загрузить список соревнований" />
+      ) : competitions.length === 0 ? (
+        <EmptyState icon={<Trophy className="h-5 w-5" />} title="Соревнований пока нет" />
+      ) : (
+        <div className="flex flex-col gap-4">
+          {competitions.map((comp) => (
+            <Card key={comp.id} className="hover:shadow-card-hover transition-shadow">
+              <CardContent className="flex items-center gap-4 pt-5">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-500/10">
+                  <Trophy className="h-6 w-6 text-accent-500" />
                 </div>
-                <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
-                  <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(comp.event_date)}</span>
-                  {comp.participant_limit && <span className="flex items-center gap-1"><Users className="h-3 w-3" />до {comp.participant_limit} участников</span>}
-                  <span className="font-medium text-accent-500">{formatRub(comp.entry_fee)}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-base font-semibold font-display text-text-primary">{comp.title}</p>
+                    <CompetitionStatusBadge status={comp.status} />
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
+                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(comp.event_date)}</span>
+                    {comp.participant_limit && <span className="flex items-center gap-1"><Users className="h-3 w-3" />до {comp.participant_limit} участников</span>}
+                    <span className="font-medium text-accent-500">{formatRub(comp.entry_fee)}</span>
+                  </div>
                 </div>
-              </div>
-              <Button variant="secondary" size="sm" asChild>
-                <Link to={`/competitions/${comp.id}`}>Подробнее</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                <Button variant="secondary" size="sm" asChild>
+                  <Link to={`/competitions/${comp.id}`}>Подробнее</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

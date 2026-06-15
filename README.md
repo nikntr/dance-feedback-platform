@@ -12,22 +12,8 @@
 | **Zustand** | Клиентский стейт (авторизация) |
 | **Axios** | HTTP-клиент с interceptors |
 | **React Hook Form + Zod** | Формы и валидация |
-| **Tailwind CSS** | Стилизация |
 | **axios-mock-adapter** | Моки API |
-| **react-hot-toast** | Уведомления |
-| **lucide-react** | Иконки |
 
-## Быстрый старт
-
-```bash
-# Установка зависимостей
-npm install
-
-# Запуск в режиме разработки (моки включены)
-npm run dev
-```
-
-Откройте http://localhost:3000
 
 ## Тестовые аккаунты (мок-режим)
 
@@ -67,30 +53,13 @@ src/
     └── handlers.ts
 ```
 
-## Переключение на реальный бэкенд
+## Бэкенд-интеграция
 
-В файле `.env.development`:
-```env
-VITE_API_BASE_URL=http://localhost:8080/api/v1
-VITE_USE_MOCKS=false  # ← отключить моки
-```
-
-> Все запросы к бэкенду идут с префиксом `api/v1/` (задаётся через `VITE_API_BASE_URL`).
-
-📦 **Материалы для бэкенд-разработчика** (контракт API, CORS, Docker, docker-compose) —
-в [`docs/backend-integration/`](docs/backend-integration/README.md).
+📦 Контракт API, требования к CORS, `Dockerfile` и `docker-compose` для бэкенда
+(Go / Gin + PostgreSQL) — в [`docs/backend-integration/`](docs/backend-integration/README.md).
 
 ## Дизайн-система
 
 **Цвета:** Тёмная тема с amber/gold акцентом (#E8900A)  
 **Шрифты:** Unbounded (заголовки) + Onest (текст)  
 **Компоненты:** Button, Input, Card, Badge, StatusBadge
-
-## Команды
-
-```bash
-npm run dev       # Dev-сервер
-npm run build     # Продакшн-сборка
-npm run lint      # ESLint
-npm run format    # Prettier
-```

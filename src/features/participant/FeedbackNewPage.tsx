@@ -3,8 +3,11 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Star, MessageSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getInitials } from '@/lib/utils'
-import { MOCK_JUDGES, MOCK_COMPETITIONS } from '@/mocks/data'
 import { useCreateFeedbackRequest } from '@/api/endpoints/feedback'
+import { useJudges } from '@/api/endpoints/judges'
+import { useCompetitions } from '@/api/endpoints/competitions'
+import { LoadingSpinner } from '@/shared/LoadingSpinner'
+import { EmptyState } from '@/shared/ErrorBoundary'
 import toast from 'react-hot-toast'
 import { cn } from '@/lib/utils'
 
@@ -22,6 +25,10 @@ export default function FeedbackNewPage() {
   const [step, setStep] = useState<1 | 2>(1)
 
   const { mutate: createRequest, isPending } = useCreateFeedbackRequest()
+  const judgesQuery = useJudges()
+  const competitionsQuery = useCompetitions()
+  const judges = judgesQuery.data?.data ?? []
+  const competitions = (competitionsQuery.data?.data ?? []).filter((c) => c.status !== 'draft')
 
   const commentValid = comment.trim().length >= COMMENT_MIN
   const canOrder = !!selectedJudge && !!selectedComp && commentValid
@@ -58,8 +65,14 @@ export default function FeedbackNewPage() {
           <h2 className="font-display text-sm font-semibold text-text-secondary uppercase tracking-wider mb-4">
             Шаг 1 — Выберите судью
           </h2>
+          {judgesQuery.isLoading && (
+            <div className="flex justify-center py-10"><LoadingSpinner /></div>
+          )}
+          {!judgesQuery.isLoading && judges.length === 0 && (
+            <EmptyState icon={<Star className="h-5 w-5" />} title="Судьи недоступны" className="mb-6" />
+          )}
           <div className="grid gap-3 sm:grid-cols-2 mb-6">
-            {MOCK_JUDGES.map((judge) => (
+            {judges.map((judge) => (
               <button
                 key={judge.id}
                 onClick={() => setSelectedJudge(judge.id)}
@@ -95,7 +108,7 @@ export default function FeedbackNewPage() {
             Шаг 2 — Соревнование и комментарий
           </h2>
           <div className="flex flex-col gap-3 mb-6">
-            {MOCK_COMPETITIONS.filter((c) => c.status !== 'draft').map((comp) => (
+            {competitions.map((comp) => (
               <button
                 key={comp.id}
                 onClick={() => setSelectedComp(comp.id)}

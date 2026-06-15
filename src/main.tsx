@@ -6,7 +6,11 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'react-hot-toast'
 
 import { router } from './router'
+import { initTheme } from './store/theme.store'
 import './index.css'
+
+// Sync the DOM with the resolved theme (light/dark) before first render
+initTheme()
 
 // ── QueryClient config ────────────────────────────────────────────────────
 
@@ -42,19 +46,19 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#161D2E',
-            color: '#EEF2F9',
-            border: '1px solid #243044',
+            background: 'rgb(var(--c-bg-elevated))',
+            color: 'rgb(var(--c-text-primary))',
+            border: '1px solid rgb(var(--c-border))',
             borderRadius: '8px',
             fontSize: '14px',
             fontFamily: 'Onest, sans-serif',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+            boxShadow: 'var(--shadow-card-hover)',
           },
           success: {
-            iconTheme: { primary: '#10B981', secondary: '#161D2E' },
+            iconTheme: { primary: '#10B981', secondary: '#ffffff' },
           },
           error: {
-            iconTheme: { primary: '#EF4444', secondary: '#161D2E' },
+            iconTheme: { primary: '#EF4444', secondary: '#ffffff' },
           },
         }}
       />

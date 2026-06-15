@@ -4,12 +4,15 @@ import { useAuthStore } from '@/store/auth.store'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CompetitionStatusBadge } from '@/components/ui/badge'
+import { EmptyState, InlineError } from '@/shared/ErrorBoundary'
+import { CardSkeleton } from '@/shared/LoadingSpinner'
 import { formatDate, formatRub } from '@/lib/utils'
-import { MOCK_COMPETITIONS, MOCK_COMPETITION_SUMMARY } from '@/mocks/data'
+import { useCompetitions } from '@/api/endpoints/competitions'
 
 export default function OrganizerDashboard() {
   const user = useAuthStore((s) => s.user)
-  const myComps = MOCK_COMPETITIONS.filter((c) => c.organizer_id === user?.id)
+  const { data, isLoading, isError } = useCompetitions()
+  const myComps = (data?.data ?? []).filter((c) => c.organizer_id === user?.id)
 
   return (
     <div className="page-container">
@@ -31,8 +34,8 @@ export default function OrganizerDashboard() {
         {[
           { label: 'Всего турниров', value: myComps.length, icon: Trophy, color: 'text-accent-500' },
           { label: 'Активных', value: myComps.filter((c) => c.status === 'open').length, icon: TrendingUp, color: 'text-emerald-400' },
-          { label: 'Участников', value: 160, icon: Users, color: 'text-blue-400' },
-          { label: 'Выплата', value: formatRub(MOCK_COMPETITION_SUMMARY.organizer_share), icon: TrendingUp, color: 'text-purple-400' },
+          { label: 'Черновиков', value: myComps.filter((c) => c.status === 'draft').length, icon: Users, color: 'text-blue-400' },
+          { label: 'Завершённых', value: myComps.filter((c) => c.status === 'finished').length, icon: TrendingUp, color: 'text-purple-400' },
         ].map((stat) => (
           <Card key={stat.label}>
             <CardContent className="pt-5">
@@ -51,6 +54,22 @@ export default function OrganizerDashboard() {
       </div>
 
       {/* Competitions list */}
+      {isLoading ? (
+        <div className="flex flex-col gap-3"><CardSkeleton /><CardSkeleton /></div>
+      ) : isError ? (
+        <InlineError message="Не удалось загрузить соревнования" />
+      ) : myComps.length === 0 ? (
+        <EmptyState
+          icon={<Trophy className="h-5 w-5" />}
+          title="Нет соревнований"
+          description="Создайте первое соревнование"
+          action={
+            <Button asChild size="sm">
+              <Link to="/organizer/competitions/new"><Plus className="h-4 w-4" />Создать</Link>
+            </Button>
+          }
+        />
+      ) : (
       <div className="flex flex-col gap-3">
         {myComps.map((comp) => (
           <Card key={comp.id} className="hover:shadow-card-hover transition-shadow">
@@ -84,6 +103,7 @@ export default function OrganizerDashboard() {
           </Card>
         ))}
       </div>
+      )}
     </div>
   )
 }

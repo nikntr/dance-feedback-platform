@@ -3,19 +3,25 @@ import { useAuthStore } from '@/store/auth.store'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { FeedbackStatusBadge } from '@/components/ui/badge'
-import { EmptyState } from '@/shared/ErrorBoundary'
+import { EmptyState, InlineError } from '@/shared/ErrorBoundary'
+import { CardSkeleton } from '@/shared/LoadingSpinner'
 import { formatDate, daysUntil } from '@/lib/utils'
-import { MOCK_FEEDBACK_REQUESTS } from '@/mocks/data'
+import { useFeedbackRequests } from '@/api/endpoints/feedback'
 import { ClipboardList } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function JudgeRequestsPage() {
   const user = useAuthStore((s) => s.user)
-  const myRequests = MOCK_FEEDBACK_REQUESTS.filter((r) => r.judge_id === user?.id)
+  const { data, isLoading, isError } = useFeedbackRequests({ judge_id: user?.id })
+  const myRequests = data?.data ?? []
   return (
     <div className="page-container">
       <div className="mb-8"><h1 className="page-title">Все запросы</h1><p className="page-subtitle">Запросы обратной связи от участников</p></div>
-      {myRequests.length === 0 ? (
+      {isLoading ? (
+        <div className="flex flex-col gap-3"><CardSkeleton /><CardSkeleton /><CardSkeleton /></div>
+      ) : isError ? (
+        <InlineError message="Не удалось загрузить запросы" />
+      ) : myRequests.length === 0 ? (
         <EmptyState icon={<ClipboardList className="h-5 w-5" />} title="Нет запросов" description="Участники ещё не отправили запросы" />
       ) : (
         <div className="flex flex-col gap-3">

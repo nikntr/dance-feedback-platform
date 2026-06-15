@@ -1,12 +1,12 @@
 import { useAuthStore } from '@/store/auth.store'
 import { Card, CardContent } from '@/components/ui/card'
 import { getInitials } from '@/lib/utils'
-import { MOCK_JUDGES } from '@/mocks/data'
+import { useJudge } from '@/api/endpoints/judges'
 import { Star } from 'lucide-react'
 
 export default function JudgeProfilePage() {
   const user = useAuthStore((s) => s.user)
-  const judge = MOCK_JUDGES.find((j) => j.id === user?.id)
+  const { data: judge } = useJudge(user?.id ?? '')
   return (
     <div className="page-container max-w-2xl">
       <h1 className="page-title mb-8">Мой профиль</h1>

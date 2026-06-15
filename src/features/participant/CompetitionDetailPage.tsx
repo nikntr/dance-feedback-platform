@@ -3,21 +3,53 @@ import { Trophy, Calendar, Users, ArrowLeft } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CompetitionStatusBadge } from '@/components/ui/badge'
+import { InlineError } from '@/shared/ErrorBoundary'
+import { LoadingSpinner } from '@/shared/LoadingSpinner'
 import { formatDate, formatRub } from '@/lib/utils'
-import { MOCK_COMPETITIONS } from '@/mocks/data'
+import { useCompetition, useRegisterForCompetition } from '@/api/endpoints/competitions'
 import toast from 'react-hot-toast'
 
 export default function CompetitionDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const comp = MOCK_COMPETITIONS.find((c) => c.id === id)
+  const { data: comp, isLoading, isError } = useCompetition(id ?? '')
+  const { mutate: register, isPending: isRegistering } = useRegisterForCompetition(id ?? '')
 
-  if (!comp) return <div className="page-container"><p className="text-text-muted">Соревнование не найдено</p></div>
+  const back = (
+    <Button variant="ghost" size="sm" asChild className="mb-6">
+      <Link to="/competitions"><ArrowLeft className="h-4 w-4" />Назад</Link>
+    </Button>
+  )
+
+  if (isLoading) {
+    return (
+      <div className="page-container max-w-2xl">
+        {back}
+        <div className="flex justify-center py-16"><LoadingSpinner size="lg" /></div>
+      </div>
+    )
+  }
+
+  if (isError || !comp) {
+    return (
+      <div className="page-container max-w-2xl">
+        {back}
+        <InlineError message="Соревнование не найдено" />
+      </div>
+    )
+  }
+
+  const handleRegister = () =>
+    register(undefined, {
+      onSuccess: (res) => {
+        toast.success('Регистрация создана! Перенаправление на оплату...')
+        if (res.payment_url) setTimeout(() => { window.location.href = res.payment_url }, 800)
+      },
+      onError: () => toast.error('Не удалось зарегистрироваться'),
+    })
 
   return (
     <div className="page-container max-w-2xl">
-      <Button variant="ghost" size="sm" asChild className="mb-6">
-        <Link to="/competitions"><ArrowLeft className="h-4 w-4" />Назад</Link>
-      </Button>
+      {back}
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-start gap-4">
@@ -32,7 +64,7 @@ export default function CompetitionDetailPage() {
                 <span className="font-semibold text-accent-500 text-base">{formatRub(comp.entry_fee)} — вступительный взнос</span>
               </div>
               {comp.status === 'open' && (
-                <Button className="mt-5" onClick={() => toast.success('Перенаправление на оплату...')}>
+                <Button className="mt-5" loading={isRegistering} onClick={handleRegister}>
                   Зарегистрироваться
                 </Button>
               )}

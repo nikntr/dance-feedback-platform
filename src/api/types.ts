@@ -164,6 +164,12 @@ export interface FeedbackRequest {
   judge_id: string
   participant_id: string
   video_id: string | null
+  /**
+   * NB: отсутствует в api.yaml v1.0.1. Нужен, чтобы участник мог открыть
+   * готовый отзыв (GET /feedback/responses/{id} принимает только id ответа).
+   * Бэкенду: добавить ссылку на ответ в FeedbackRequest (по аналогии с video_id).
+   */
+  response_id: string | null
   comment: string | null
   price: number
   status: FeedbackRequestStatus
@@ -173,6 +179,26 @@ export interface FeedbackRequest {
 
 export interface FeedbackRequestAction {
   action: 'confirm'
+}
+
+/**
+ * Список запросов ОС, ограниченный текущим пользователем.
+ *
+ * NB: эндпоинта `GET /feedback/requests` в api.yaml v1.0.1 нет —
+ * он необходим фронтенду для дашбордов («Мои запросы» участника,
+ * входящие запросы судьи). Бэкенд ДОЛЖЕН ограничивать выборку
+ * текущим пользователем из JWT; фильтры participant_id/judge_id —
+ * это намерение клиента, а не замена авторизации.
+ */
+export interface FeedbackRequestList {
+  data: FeedbackRequest[]
+  pagination: Pagination
+}
+
+export interface FeedbackRequestsParams extends PaginationParams {
+  participant_id?: string
+  judge_id?: string
+  status?: FeedbackRequestStatus
 }
 
 // ── Videos ────────────────────────────────────────────────

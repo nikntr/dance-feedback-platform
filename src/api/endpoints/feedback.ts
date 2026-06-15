@@ -8,6 +8,8 @@ import type {
   FeedbackRequest,
   FeedbackRequestAction,
   FeedbackRequestCreated,
+  FeedbackRequestList,
+  FeedbackRequestsParams,
   FeedbackResponse,
 } from '@/api/types'
 
@@ -15,6 +17,8 @@ import type {
 
 export const feedbackKeys = {
   requests: ['feedback', 'requests'] as const,
+  requestsList: (params?: FeedbackRequestsParams) =>
+    ['feedback', 'requests', 'list', params] as const,
   request: (id: string) => ['feedback', 'requests', id] as const,
   responses: ['feedback', 'responses'] as const,
   response: (id: string) => ['feedback', 'responses', id] as const,
@@ -26,6 +30,9 @@ export const feedbackApi = {
   // Requests
   createRequest: (data: CreateFeedbackRequest) =>
     apiClient.post<FeedbackRequestCreated>('/feedback/requests', data).then((r) => r.data),
+
+  listRequests: (params?: FeedbackRequestsParams) =>
+    apiClient.get<FeedbackRequestList>('/feedback/requests', { params }).then((r) => r.data),
 
   getRequest: (id: string) =>
     apiClient.get<FeedbackRequest>(`/feedback/requests/${id}`).then((r) => r.data),
@@ -46,6 +53,13 @@ export const feedbackApi = {
 }
 
 // ── React Query hooks ─────────────────────────────────────────────────────
+
+export function useFeedbackRequests(params?: FeedbackRequestsParams) {
+  return useQuery({
+    queryKey: feedbackKeys.requestsList(params),
+    queryFn: () => feedbackApi.listRequests(params),
+  })
+}
 
 export function useFeedbackRequest(id: string) {
   return useQuery({

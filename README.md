@@ -53,6 +53,11 @@ src/
     └── handlers.ts
 ```
 
+## Бэкенд-интеграция
+
+📦 Контракт API, требования к CORS, `Dockerfile` и `docker-compose` для бэкенда
+(Go / Gin + PostgreSQL) — в [`docs/backend-integration/`](docs/backend-integration/README.md).
+
 ## Дизайн-система
 
 **Цвета:** Тёмная тема с amber/gold акцентом (#E8900A)  

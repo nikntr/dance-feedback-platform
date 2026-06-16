@@ -1,0 +1,47 @@
+# Локальный стек: API (Gin) + PostgreSQL + Adminer.
+# Скопируйте в корень репозитория бэкенда рядом с Dockerfile.
+#   docker compose up --build
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dfp
+      POSTGRES_PASSWORD: dfp_password
+      POSTGRES_DB: dance_feedback
+    ports:
+      - "5432:5432"
+    volumes:
+      - dfp-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dfp -d dance_feedback"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: "8080"
+      DATABASE_URL: "postgres://dfp:dfp_password@db:5432/dance_feedback?sslmode=disable"
+      JWT_SECRET: "change-me-in-dev"
+      # Разрешённые origin фронта (дев + прод-домен Vercel)
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000,https://dancefeedbackplatform.vercel.app"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  # Веб-интерфейс для просмотра БД во время разработки/защиты
+  adminer:
+    image: adminer:4
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  dfp-pgdata:
